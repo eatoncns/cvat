@@ -13,6 +13,8 @@ import numpy as np
 from PIL import Image
 from traceback import print_exception
 from ast import literal_eval
+import re
+import boto3
 
 import mimetypes
 _SCRIPT_DIR = os.path.realpath(os.path.dirname(__file__))
@@ -454,6 +456,8 @@ def _prepare_paths(source_paths, target_paths, storage):
                     os.remove(path)
                 except:
                     os.rmdir(path)
+    elif storage == 's3':
+        counters['video'] += 1
     else:
         # Files are available via mount share. Count them and separate dirs.
         for source_path, target_path in zip(source_paths, target_paths):
@@ -511,6 +515,16 @@ def _copy_data_from_share(share_files_mapping, share_dirs_mapping):
         if not os.path.exists(target_dir):
             os.makedirs(target_dir)
         shutil.copyfile(source_path, target_path)
+
+'''
+    Copy data from S3 to local
+'''
+def _copy_data_from_s3(s3_path, local_path):
+    s3_path_re = re.search('s3://([^/]+)(.*)', s3_path)
+    bucket = s3_path_re.group(1)
+    key = s3_path_re.group(2).lstrip('/')
+    s3 = boto3.resource('s3')
+    s3.meta.client.download_file(bucket, key, local_path)
 
 
 '''
@@ -681,6 +695,13 @@ def _create_thread(tid, params):
         job.meta['status'] = 'Data are being copied from share..'
         job.save_meta()
         _copy_data_from_share(share_files_mapping, share_dirs_mapping)
+
+    if params['storage'] == 's3':
+        job.meta['status'] = 'Data is being copied from S3...'
+        job.save_meta()
+        s3_path = params['SOURCE_PATHS'][0]
+        local_path = params['TARGET_PATHS'][0]
+        _copy_data_from_s3(s3_path, local_path)
 
     archive = None
     if counters['archive']:

@@ -136,6 +136,7 @@ RUN if [ "$WITH_DEXTR" = "yes" ]; then \
     fi
 
 COPY ssh ${HOME}/.ssh
+COPY aws ${HOME}/.aws
 COPY cvat/ ${HOME}/cvat
 COPY tests ${HOME}/tests
 RUN patch -p1 < ${HOME}/cvat/apps/engine/static/engine/js/3rdparty.patch

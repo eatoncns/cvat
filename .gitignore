@@ -9,6 +9,7 @@
 /components/openvino/*.tgz
 /profiles
 /ssh/*
+/aws/*
 !/ssh/README.md
 
 

@@ -72,6 +72,13 @@ def create_task(request):
                     raise Exception('Bad file path on share: ' + abspath)
                 source_paths.append(abspath)
                 target_paths.append(os.path.join(upload_dir, relpath))
+        elif params['storage'] == 's3':
+            data_list = request.POST.getlist('data')
+            for s3_path in data_list:
+                filename = os.path.basename(s3_path)
+                source_paths.append(s3_path)
+                target_paths.append(os.path.join(upload_dir, filename))
+
         else:
             data_list = request.FILES.getlist('data')
 
