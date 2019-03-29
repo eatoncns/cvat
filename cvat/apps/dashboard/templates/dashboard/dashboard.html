@@ -110,7 +110,15 @@ Example: @select=race:__undefined__,skip,asian,black,caucasian,other'/>
                     <td> <label class="regular h2"> Source: </label> </td>
                     <td>
                         <input id="dashboardLocalSource" type="radio" name="sourceType" value="local" checked=true/> <label for="dashboardLocalSource" class="regular h2" for="localSource"> Local </label>
-                        <br> <input id="dashboardShareSource" type="radio" name="sourceType" value="share"/> <label for="dashboardShareSource" class="regular h2" for="shareSource"> Share </label>
+                        <br> <input id="dashboardShareSource" type="radio"
+                        name="sourceType" value="share"/> <label
+                                          for="dashboardShareSource"
+                                          class="regular h2" for="shareSource">
+                        Share</label>
+                        <br> <input id="dashboardS3Source" type="radio"
+                        name="sourceType" value="s3"/> <label
+                        for="dashboardS3Source" class="regular h2"
+                        for="s3Source"> S3 </label>
                     </td>
                 </tr>
                 <tr>
@@ -186,6 +194,13 @@ Example: @select=race:__undefined__,skip,asian,black,caucasian,other'/>
                 <button id="dashboardCancelBrowseServer" class="regular h2" style="margin: 0px 10px"> Cancel </button>
                 <button id="dashboardSubmitBrowseServer" class="regular h2" style="margin: 0px 10px"> Submit </button>
             </center>
+        </div>
+    </div>
+
+    <div id="dashboardS3PathModal" class="modal hidden">
+        <div style="width: 500px; height: 50px;" class="modal-content noSelect">
+          <input id="dashboardS3PathInput" placeholder="s3://bucket/key" style="width: 65%" type="text"/>
+          <button id="dashboardSubmitS3Path" class="regular h2" style="margin: 0px 10px"> Submit </button>
         </div>
     </div>
 

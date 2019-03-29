@@ -316,13 +316,17 @@ function setupTaskCreator() {
     let bugTrackerInput = $("#dashboardBugTrackerInput");
     let localSourceRadio = $("#dashboardLocalSource");
     let shareSourceRadio = $("#dashboardShareSource");
+    let s3SourceRadio = $("#dashboardS3Source");
     let selectFiles = $("#dashboardSelectFiles");
     let filesLabel = $("#dashboardFilesLabel");
     let localFileSelector = $("#dashboardLocalFileSelector");
     let shareFileSelector = $("#dashboardShareBrowseModal");
+    let s3PathSelector = $("#dashboardS3PathModal");
     let shareBrowseTree = $("#dashboardShareBrowser");
     let cancelBrowseServer = $("#dashboardCancelBrowseServer");
     let submitBrowseServer = $("#dashboardSubmitBrowseServer");
+    let submitS3Path = $("#dashboardSubmitS3Path");
+    let s3PathInput = $("#dashboardS3PathInput");
     let flipImagesBox = $("#dashboardFlipImages");
     let zOrderBox = $("#dashboardZOrder");
     let segmentSizeInput = $("#dashboardSegmentSize");
@@ -373,11 +377,20 @@ function setupTaskCreator() {
         updateSelectedFiles();
     });
 
+    s3SourceRadio.on("click", function() {
+        if (source === "s3") {
+            return;
+        }
+        source = "s3";
+        files = [];
+        updateSelectedFiles();
+    });
+
     selectFiles.on("click", function() {
         if (source === "local") {
             localFileSelector.click();
         }
-        else {
+        else if (source === "share") {
             shareBrowseTree.jstree("refresh");
             shareFileSelector.removeClass("hidden");
             shareBrowseTree.jstree({
@@ -389,6 +402,9 @@ function setupTaskCreator() {
                 },
                 plugins: ["checkbox", "sort"],
             });
+        }
+        else {
+            s3PathSelector.removeClass("hidden");
         }
     });
 
@@ -404,6 +420,17 @@ function setupTaskCreator() {
             files = shareBrowseTree.jstree(true).get_selected();
             cancelBrowseServer.click();
             updateSelectedFiles();
+        }
+    });
+
+    s3PathInput.on("change", function(e) {
+        files = [e.target.value];
+        updateSelectedFiles();
+    });
+
+    submitS3Path.on("click", function() {
+        if (!createModal.hasClass("hidden")) {
+            s3PathSelector.addClass("hidden")
         }
     });
 
